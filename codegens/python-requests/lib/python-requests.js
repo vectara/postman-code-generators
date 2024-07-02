@@ -18,6 +18,9 @@ function getheaders (request, indentation) {
 
   if (!_.isEmpty(headerArray)) {
     headerArray = _.reject(headerArray, 'disabled');
+    headerArray = _.reject(headerArray, function (header) {
+      return request.body && request.body.mode && request.body.mode === 'formdata' && header.key === 'Content-Type';
+    });
     headerMap = _.map(headerArray, function (header) {
       return `${indentation}'${sanitize(header.key, 'header', true)}': ` +
             `'${sanitize(header.value, 'header')}'`;
